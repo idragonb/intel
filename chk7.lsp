@@ -1,0 +1,32 @@
+(defun chk7 (/ retval)
+   (setq retval "ok")
+   (setq first T)
+   (while (setq tbllist (tblnext "BLOCK" first))
+      (setq first nil)
+      (setq c1 (cdr (assoc 1 tbllist)))
+      (setq c2 (cdr (assoc 2 tbllist)))
+      (if c1
+         (if (wcmatch c1 "*\\*");(hasslash c1)
+            (progn 
+               (setq retval "X")
+               (appendreport (strcat "-xref: " c2 " has path "))
+            )
+         )
+      )
+   )
+   retval
+)
+            
+;(defun hasslash (str / nn retval)
+;   (setq slen (strlen str))
+;   (setq nn 0)
+;   (setq retval nil)
+;   (while (< nn slen)
+;      (setq curlet (substr str nn 1))
+;      (if (= curlet "\\")
+;         (setq retval T)
+;      )
+;      (setq nn (1+ nn))
+;   )
+;   retval
+;)

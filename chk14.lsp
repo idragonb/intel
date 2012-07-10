@@ -1,0 +1,47 @@
+(defun chk14 (/ retval)
+   (setq retval "ok")
+   (setq let1 (substr (getvar "dwgname") 1 1))
+   (if (or (= let1 "G") (= let1 "R"))
+      (setq retval "NA")
+      (setq retval (c:northchk))
+   )
+   retval
+)
+
+(defun c:northchk (/ retval)
+   (setq first T)
+   (setq retval "X")
+   (while (setq tbllist (tblnext "BLOCK" first))
+      (setq first nil)
+      (setq c2 (cdr (assoc 2 tbllist)))
+   (if (or (wcmatch (strcase c2) "*G_INORTH*")
+              (wcmatch (strcase c2) "*G-INORTH*")
+          )
+(progn
+(terpri)
+(princ c2)
+)
+)
+      (if    (or (wcmatch (strcase c2) "*G_INORTH*")
+                (wcmatch (strcase c2) "*G-INORTH*")
+             )
+         (setq retval "ok")
+      )
+   )
+   (if (setq tbllist (tblsearch "LAYER" "G-ANNO-SYMB"))
+      (if (= (cdr (assoc 70 tbllist)) 0)
+         (setq retval "ok")
+      )
+   )
+   retval
+)
+
+
+;(defun c:northchk (/ retval)
+;   (setq ssset (ssget "X" '((2 . "G-Inorth"))))
+;   (if ssset
+;      (setq retval "ok")
+;      (setq retval "X")
+;   )
+;   retval
+;)
