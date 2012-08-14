@@ -1,0 +1,226 @@
+revision history
+
+current version
+version 2.0.1.9 creation date 13-08-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 13-08-12) Accepts no-scale in non-layout drawings in title block
+2) (from 09-08-12) If blocks and xrefs are in model, counts only xrefs for chk10
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+2) (from 8-7-12) dimstyle entities analysis
+3) (from 10-7-12) add uninstall option or instructions
+4) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+
+version 2.0.1.8 creation date 08-08-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 09-08-12) fixed origin reporting problem for xrefs
+2) (from 09-08-12) program accepts .DWG as well as .dwg
+3) (from 09-08-12) removed layer check in title block
+4) (from 09-08-12) title block checked with list of legal on chk5 tab
+5) (from 09-08-12) reports na instead of ok in chk3 if not enlarged or layout
+6) (from 09-08-12) checks dimscale against allowed scale list in chk 16
+7) (from 09-08-12) checks line 4 in title block against keywords
+8) (from 09-08-12) north arrow checks that inserted with 0 rotation and mirrored in x
+9) (from 09-08-12) corrected false error  on chk1 for non-view files
+10) (from 09-08-12) fonts are checked in text style
+11) (from 09-08-12) checks valid plotscale content against list
+12) (from 8-7-12) check if dwg scale reported in title block is in allowed list
+13) (from 17-7-12) profile saved between autocad sessions on intel workstations
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+2) (from 8-7-12) dimstyle entities analysis
+3) (from 10-7-12) add uninstall option or instructions
+4) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+
+current version
+version 2.0.1.7 creation date 08-08-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 17-7-12) purge check fixed
+2) (from 8-8-12) fixed bug in BLK_7 revision chk15
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 17-7-12) profile not saved between autocad sessions on intel workstations
+2) (from 8-7-12) chk2 - check titleblock scale against list of scales
+3) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+4) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - report to summary
+5) (from 8-7-12) dimstyle entities analysis
+6) (from 10-7-12) add uninstall option or instructions
+7) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+
+current version
+version 2.0.1.6 creation date 05-08-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 26-7-12) Checks for valid text style name - chk11
+2) (from 26-7-12) Accomodates both types of accepted revision blocks IBLK1, IBLK7 - chk15
+3) (from 26-7-12) Checks if Dimscale is ok - chk16
+4) (from 23-7-12) Checks each xref if in exception list or valid naming scheme chk5
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 17-7-12) purge accurate when reporting purged but does not catch all purged drawings
+2) (from 8-7-12) chk2 - check titleblock scale against list of scales
+3) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+4) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - report to summary
+5) (from 8-7-12) dimstyle entities analysis
+6) (from 10-7-12) add uninstall option or instructions
+7) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+8) (from 17-7-12) profile not saved between autocad sessions on intel workstations
+
+
+current version
+version 2.0.1.5 creation date 24-07-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 19-7-12) updated prototype.xlxs for bug found in 2,3,4, checks
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk5 - find how to access master drawing list
+2) (from 8-7-12) chk2 - check titleblock scale against list of scales
+3) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+4) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - report to summary
+5) (from 8-7-12) dimstyle entities analysis
+6) (from 10-7-12) add uninstall option or instructions
+7) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+8) (from 17-7-12) profile not saved between autocad sessions on intel workstations
+9) (from 17-7-12) purge accurate when reporting purged but does not catch all purged drawings
+
+
+Current version
+Version 2.0.1.4 creation date 17-07-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 17-7-12) save excel at end
+2) (from 17-7-12) focus on summary tab at end
+3) (from 17-7-12) general formatting for ease of use
+4) (from 17-7-12) report ok for xrefs per naming convention
+5) (from 17-7-12) string case title block name
+6) (from 17-7-12) handles slightly different title block attributes
+7) (from 17-7-12) scale check accepts scales with spaces at beginning
+8) (from 17-7-12) use xlxs extension to prevent stall during excel save
+9) (from 17-7-12) put current date on summary sheet
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk5 - find how to access master drawing list
+2) (from 8-7-12) chk2 - check titleblock scale against list of scales
+3) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+4) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - report to summary
+5) (from 8-7-12) dimstyle entities analysis
+6) (from 10-7-12) add uninstall option or instructions
+7) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+8) (from 17-7-12) profile not saved between autocad sessions on intel workstations
+9) (from 17-7-12) purge accurate when reporting purged but does not catch all purged drawings
+
+Current version
+Version 2.0.1.2 creation date 17-07-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 15-7-12) chk1 - if xref do not check for title block - put na
+2) (from 15-7-12) chk4 - corrected "Yes" to "ok" in report
+3) (from 15-7-12) all checks - fixed initializing in excel for existing data removal
+4) (from 15-7-12) chk2 if drawing is xref report "na" not "x"
+5) (from 15-7-12) chk4 if drawing is xref report "na"
+6) (from 15-7-12) chk5 if drawing is xref report "na"
+7) (from 15-7-12) chk6 if drawing is xref report "na"
+8) (from 15-7-12) chk3 if drawing is xref and no entities in paperspace "ok"
+9) (from 15-7-12) chk14 if drawing is xref report "na"
+10) (from 15-7-12) chk15 if drawing is xref report "na"
+11) (from 11-07-12) check purge
+12) (from 17-7-12) format single drawing reports in summary excel
+13) (from 8-7-12) chk14 - if civil drawing, report ok for north arrow at 0 and 90 degrees
+14) (from 8-7-12) check for bind problem $0$ and $ existing in name
+15) (from 8-7-12) moved 13,14,16,17 into extraction tab so that each dwg has full report
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk5 - find how to access master drawing list
+2) (from 8-7-12) chk2 - check titleblock scale against list of scales
+3) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+4) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - report to summary
+5) (from 8-7-12) dimstyle entities analysis
+6) (from 10-7-12) add uninstall option or instructions
+7) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+
+
+Current version
+Version 2.0.1.1 creation date 11-07-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 8-7-12) chk8 - list layer0 entities 
+2) (from 8-7-12) chk10 - report ok if not layout
+3) (from 8-7-12) origin problem check working correctly
+4) (from 8-7-12) path problem check working properly
+5) (from 8-7-12) chk5 - leave blank
+6) (from 8-7-12) chk1 fixed problem with 2nd letter search
+7) (from 8-7-12) chk2 - in title block - first and 4th lines important
+8) (from 8-7-12) B22 - chk2 title in model, numeric fix
+9) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - creates but does not report to summary
+10) (from 8-7-12) move all except 13,14,16,17 into extraction tab so that each dwg has full report
+11) (from 4-7-12) chk3 enlarged view - checks that xref is identical
+
+UNSOLVED be incorporated in future revision:
+
+1) (from 8-7-12) chk14 - if civil drawing, report ok for north arrow at 0 and 90 degrees
+2) (from 8-7-12) chk5 - find how to access master drawing list
+3) (from 8-7-12) check for bind problem $0$ and $ existing in name
+4) (from 8-7-12) chk2 - check titleblock scale against list of scales
+5) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+6) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc - report to summary
+7) (from 8-7-12) move 13,14,16,17 into extraction tab so that each dwg has full report
+8) (from 8-7-12) dimstyle entities analysis
+9) (from 10-7-12) add uninstall option or instructions
+10) (from 11-07-12) check purge
+
+Version 2.0.1.0 creation date: 10-07-12------------------------------------------------------------------------------
+
+SOLVED modifications in this release:
+
+1) Added revision history (this document)
+2) (from 4/7/12) chk3 - modified sector check to -OV
+3) (from 4/7/12) chk14 - check if north block exists and in enlarged view and layout and that it is rotated left
+4) (from 4/7/12) chk15 - check that revision description exists
+5) (from 4/7/12) chk15 - check that "RECORD DRAWING" appears in one of the revision lines
+6) (from 4/7/12) chk13 - leave empty unless no annotation symbols found then "x"
+7) (from 4/7/12) chk16 - check dimscale (fit) against dimstyle name STANDARD100 etc
+8) modified install program
+9) added init button to the tool bar which solves all doc close problem in previous release
+
+
+UNSOLVED be incorporated in future revision:
+
+1) (from 8-7-12) chk8 - list layer0 entities 
+2) (from 8-7-12) chk10 - report ok if not layout
+3) (from 8-7-12) chk14 - if cicil drawing, report ok for north arrow at 0 and 90 degrees
+4) (from 8-7-12) origin problem check not working correctly
+5) (from 8-7-12) path problem check not working properly
+6) (from 8-7-12) chk5 - leave blank and find how to access master drawing list
+7) (from 8-7-12) check for bind problem $0$ and $ existing in name
+8) (from 8-7-12) chk1 problem with 2nd letter search
+9) (from 8-7-12) chk2 - in title block - first and 4th lines important
+10) (from 8-7-12) chk2 - check titleblock scale against list of scales
+11) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+12) (from 8-7-12) B22 - chk2 title in model, numeric fix
+13) (from 8-7-12) Correct grid name check - should be GSG-0-F- etc
+14) (from 8-7-12) move all into extraction tab so that each dwg has full report
+15) (from 8-7-12) dimstyle entities analysis
+16) (from 4-7-12) chk3 enlarged view - check that xref is identical
+17) (from 10-7-12) add uninstall option or instructions
+------------------------------------------------------------------------------------------------------------------------

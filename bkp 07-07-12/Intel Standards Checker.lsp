@@ -11,7 +11,7 @@
       )
    )
 )
-;---------- set prototype in background
+;---------- save current
 (defun open-dwg-prototype ()
    (setq acad (vlax-get-acad-object))
    (setq docs (vlax-get-property acad 'Documents))
@@ -51,6 +51,10 @@
 
    (dcl_Control_SetEnabled Intel-Standards-Checker_Form1_TextButton15 nil)
    (dcl_Control_SetEnabled Intel-Standards-Checker_Form1_TextButton3 nil)
+
+
+
+
 
    (dcl_ListBox_Clear Intel-Standards-Checker_Form1_ListBox7);4/7
  ;  (dcl_Control_SetEnabled Intel-Standards-Checker_Form1_CheckBox3 nil)
@@ -96,6 +100,7 @@
 
 ; layer manager
 
+
 (defun add-to-list (rline this-list / nn)
    (setq nn 1)
    (while (/= (substr rline nn 4) ".dwg")
@@ -105,7 +110,11 @@
    (dcl_ListBox_AddString this-list this-dwg)
 )
 
+
+
 ; -------- script controls
+
+
 
 (defun put-file-in-list (rline / nn)
    (setq rlength (strlen rline))
@@ -118,7 +127,7 @@
 )
 
 (defun make-excel-name ()
-   (strcat "Intel Standard Report " (rtos (getvar "cdate") 2 4) ".xlsx")
+   (strcat "Intel Standard Report " (rtos (getvar "cdate")) " .xls")
 )
 
 (defun link-to-excel ()
@@ -129,92 +138,51 @@
   (setq excel (vlax-get-or-create-object "Excel.Application"))
   (setq GLOBAL-excel excel)
   (setq workbooks (vlax-get-property excel 'Workbooks))
-  (setq workbook (vlax-invoke-method workbooks 'Open (strcat installdirectoryINTEL "Prototype.xlsx")))
+  (setq workbook (vlax-invoke-method workbooks 'Open (strcat installdirectoryINTEL "Prototype.xls")))
   (setq GLOBAL-excel-workbook workbook)
   (setq reportname (make-excel-name))
-  (vlax-invoke-method workbook 'Saveas (strcat path-name reportname) 51 nil nil :vlax-false :vlax-false 1 2)
+  (vlax-invoke-method workbook 'Saveas (strcat path-name reportname) -4143 nil nil :vlax-false :vlax-false 1 2)
   (vla-put-visible excel :vlax-true)
   (setq xlsheets (vlax-get-property workbook 'Sheets))
   (setq xlsheet (vlax-get-property xlsheets 'Item "extractions"))
   (vlax-invoke-method xlsheet 'Activate)
   (setq range (vlax-get-property xlsheet 'Range "Date"))
   (vlax-put-property range 'Item 1 1 (exceldate))
-  
 )
 
 
 
 (defun c:Intel-Standards-Checker_Form1_TextButton15_OnClicked ( / nn) ; run checks
 
-  (Setq path-name (dcl_Control_GetCaption Intel-Standards-Checker_Form1_Label5))
-  (vl-registry-write "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Working directory" path-name)
+   (Setq path-name (dcl_Control_GetCaption Intel-Standards-Checker_Form1_Label5))
+   (vl-registry-write "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Working directory" path-name)
 
-  (Setq list-length (dcl_ListBox_GetCount Intel-Standards-Checker_Form1_ListBox7))
-  (setq nn 0)
+   (Setq list-length (dcl_ListBox_GetCount Intel-Standards-Checker_Form1_ListBox7))
+   (setq nn 0)
 
-  (link-to-excel)
+   (link-to-excel)
      
-  (while (< nn list-length)
-    (Setq list-item (dcl_ListBox_GetText Intel-Standards-Checker_Form1_ListBox7 nn))
-    (vl-registry-write "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing" list-item)
-    (do-checks nn)
-    (setq nn (1+ nn))
-    (put-summary nn)
-  )
-  (dcl_Control_SetCaption Intel-Standards-Checker_Form1_Label1 reportname)
+   (while (< nn list-length)
+      (Setq list-item (dcl_ListBox_GetText Intel-Standards-Checker_Form1_ListBox7 nn))
+      (vl-registry-write "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing" list-item)
+      (do-checks nn)
+      
+
+      (setq nn (1+ nn))
+   )
+   (dcl_Control_SetCaption Intel-Standards-Checker_Form1_Label1 reportname)
 
   (dcl_Control_SetEnabled Intel-Standards-Checker_Form1_TextButton3 T)
 
-  (terpri)
-  (terpri)
-  (setq excel (vlax-get-object "excel.application"))
-  (setq sheets (vlax-get-property excel 'Sheets))
-  (setq xlsheet (vlax-get-property sheets 'Item "summary"))
-  (vlax-invoke-method xlsheet 'Activate)
-  (vlax-invoke-method workbook 'Save)
-  (princ "Completed checks - view excel...")
-)
 
-(defun put-summary (nn)
-  (setq dname (getresult "thisdwg"))
-  (putinexcel-indexed "dwgchecked" dname nn 1)
-  (setq r1 (getresult "_chk1"))
-  (putinexcel-indexed "chk1Summary" r1 nn 1)
-  (setq r2 (getresult "_chk2"))
-  (putinexcel-indexed "chk2Summary" r2 nn 1)
-  (setq r3 (getresult "_chk3"))
-  (putinexcel-indexed "chk3Summary" r3 nn 1)
-  (setq r4 (getresult "_chk4"))
-  (putinexcel-indexed "chk4Summary" r4 nn 1)
-  (setq r5 (getresult "_chk5"))
-  (putinexcel-indexed "chk5Summary" r5 nn 1)
-  (setq r6 (getresult "_chk6"))
-  (putinexcel-indexed "chk6Summary" r6 nn 1)
-  (setq r7 (getresult "_chk7"))
-  (putinexcel-indexed "chk7Summary" r7 nn 1)
-  (setq r8 (getresult "_chk8"))
-  (putinexcel-indexed "chk8Summary" r8 nn 1)
-  (setq r9 (getresult "_chk9"))
-  (putinexcel-indexed "chk9Summary" r9 nn 1)
-  (setq r10 (getresult "_chk10"))
-  (putinexcel-indexed "chk10Summary" r10 nn 1)
-  (setq r11 (getresult "_chk11"))
-  (putinexcel-indexed "chk11Summary" r11 nn 1)
-  (setq r12 (getresult "_chk12"))
-  (putinexcel-indexed "chk12Summary" r12 nn 1)
-  (setq r13 (getresult "_chk13"))
-  (putinexcel-indexed "chk13Summary" r13 nn 1)
-  (setq r14 (getresult "_chk14"))
-  (putinexcel-indexed "chk14Summary" r14 nn 1)
-  (setq r15 (getresult "_chk15"))
-  (putinexcel-indexed "chk15Summary" r15 nn 1)
-  (setq r16 (getresult "_chk16"))
-  (putinexcel-indexed "chk16Summary" r16 nn 1)
-  (setq r17 (getresult "_chk17"))
-  (putinexcel-indexed "chk17Summary" r17 nn 1)
-  
-  (setq r18 (getresult "_chk18"))
-  (putinexcel-indexed "chk18Summary" r18 nn 1)
+ ; (setq excel (vlax-get-or-create-object "Excel.Application"))
+ ; (setq workbooks (vlax-get-property excel 'Workbooks))
+ ; (setq xlsheets (vlax-get-property workbook 'Sheets))
+ ; (setq xlsheet (vlax-get-property xlsheets 'Item "Summary"))
+ ; (vlax-invoke-method xlsheet 'Activate)
+  (terpri)
+  (terpri)
+  (princ "Completed checks - view excel...")
 )
 
 
@@ -243,27 +211,113 @@
 )
 
 (defun open-dwg-and-link (docfile)
-  (setq acadmain (vlax-get-acad-object))
+ (setq acadmain (vlax-get-acad-object))
   (setq alldocs (vlax-get-property acadmain 'Documents))
-  (vlax-invoke-method alldocs 'Open docfile :vlax-true) ; open read-only
+ (vlax-invoke-method alldocs 'Open docfile :vlax-true) ; open read-only
  )
 
 (defun do-checks (nn / docfile acadmain alldocs startdoc currdoc)
 
+
+
+
   (setq dwgpath (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Working directory"))
   (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
-  (setq docfile (strcat dwgpath dwgname))
+   (setq docfile (strcat dwgpath dwgname))
    
   (setq currdoc (open-dwg-and-link docfile)) ; open read-only
-  (load "extract-all.lsp") ; load in header
-  (dump-to-excel)
+(load "extract-all.lsp")
+(dump-to-excel)
 
-  (copytab "copyarea" "extractions")
+(copytab "copyarea" "extractions")
 
-  (vlax-invoke-method currdoc 'Close :vlax-false)
-  (princ docfile)
-  (terpri)
+  ; extract all dwg info
+  
+;  (load "chk1.lsp")
+;  (chk1); get result and put on line
+;  (load "chk2.lsp")
+;  (chk2)
+;  (load "chk3.lsp")
+;  (chk3)
+;  (load "chk4.lsp")
+;  (chk4)
+;  (load "chk5.lsp")
+;  (chk5)
+;  (load "chk6.lsp")
+;  (chk6)
+  
+;  (dwgname-excel dwgname nn); put after check and load results
+
+  
+
+ ; (setq acadmain (vlax-get-acad-object))
+ ; (setq alldocs (vlax-get-property acadmain 'Documents))
+ ; (setq doc2 (vlax-invoke-method docs 'Item 1))
+ ; (vlax-invoke-method doc2 'Close)
+
+  ;(vlax-invoke-method currdoc 'Activate)
+  ; in new dwg - reactivate all
+  ;(setq acadmain (vlax-get-acad-object))
+  ;(setq alldocs (vlax-get-property acadmain 'Documents))
+  ;(setq currdoc (vlax-get-property acadmain 'ActiveDocument))
+  
+ ; (load "Intel Standards Checker.lsp")
+ ; (load "submittalchk.lsp")
+  ;(c:submittalchk)
+ ; (load "xref-record.lsp")
+ ; (c:recordxref)
+ ; (dcl_Form_Close Intel-Standards-Checker_Form2)
+  ;(setq count (- (vlax-get-property alldocs 'Count) 2))
+  ;(setq startdoc (vlax-invoke-method alldocs 'Item count))
+
+ 
+  
+  ;(vlax-invoke-method startdoc 'Activate)
+
+
+  (vlax-invoke-method currdoc 'Close)
+
+  ; (vlax-release-object currdoc)
+ ; (vlax-release-object alldocs)
+ ; (vlax-release-object acadmain)
+  
+   (princ docfile)
+   (terpri)
 )
+
+(defun dwgname-excel (dwgname nn / excel workbooks workbook xlsheet range)
+  (setq excel (vlax-get-or-create-object "Excel.Application"))
+  (setq workbooks (vlax-get-property excel 'Workbooks))
+  (setq workbook (vlax-get-property excel 'ActiveWorkbook))
+  (setq xlsheet (vlax-get-property excel 'ActiveSheet))
+  (setq range (vlax-get-property excel 'Range "dwgname"))
+  (vlax-put-property range 'Item (+ nn 1) 1 dwgname)
+
+  (setq result (getresult "chk1"))
+  (vlax-put-property range 'Item (+ nn 1) 2 result)
+  (setq result (getresult "chk2"))
+  (vlax-put-property range 'Item (+ nn 1) 3 result)
+    (setq result (getresult "chk3"))
+  (vlax-put-property range 'Item (+ nn 1) 4 result)
+    (setq result (getresult "chk4"))
+  (vlax-put-property range 'Item (+ nn 1) 5 result)
+    (setq result (getresult "chk5"))
+  (vlax-put-property range 'Item (+ nn 1) 6 result)
+    (setq result (getresult "chk6"))
+  (vlax-put-property range 'Item (+ nn 1) 7 result)
+  
+
+  (vlax-release-object range)
+  (vlax-release-object xlsheet)
+  (vlax-release-object workbook)
+  (vlax-release-object workbooks)
+  (vlax-release-object excel)
+
+)
+
+
+  
+
 
 
 (defun subin (str sub-str str-iden / nn retval)
@@ -318,7 +372,7 @@
 (defun put-dwg-list (dwg-list)
    (setq first-item (substr (nth 0 dwg-list) path-len))
    (setq extension (substr first-item (- (strlen first-item) 2)))
-   (if (= (strcase extension T) "dwg")
+   (if (= extension "dwg")
       (foreach thisdwg dwg-list
          (dcl_ListBox_AddString Intel-Standards-Checker_Form1_ListBox7 (substr thisdwg path-len))
       )

@@ -1,0 +1,3 @@
+Intel Standards Checker Version 2.0
+This program can be freely distributed to Intel employees and Intel service providers for the sole purpose of checking compatibility of Submittal Drawings of Intel projects that need to conform to current project standards. Re-engineering or reverse engineering for other purposes or distribution beyond the mentioned above can only be done with express written permission from the developer.
+Any questions, bug reports or services regarding program can be directed to support@ilact.com. Program comes "as-is" with no implication of stability or useability on any system other than those that are covered in a service contract.

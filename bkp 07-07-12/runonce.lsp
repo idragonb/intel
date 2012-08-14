@@ -1,0 +1,8 @@
+(setq acadobj (vlax-get-acad-object))
+(setq prefobj (vlax-get-property acadobj 'Preferences))
+(setq fileprefs (vlax-get-property prefobj 'Files))
+(setq supportpaths (vlax-get-property fileprefs 'SupportPath))
+(setq supportpaths (strcat supportpaths ";" instdirINTEL))
+(vlax-put-property fileprefs 'SupportPath supportpaths)
+(command "menuunload" "Intel-Standards-Checker")
+(command "menuload" "Intel-Standards-Checker.cui")

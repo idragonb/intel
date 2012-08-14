@@ -22,31 +22,18 @@
 (defun chk1-extractions ()
    ;--- chk1 extraction
    (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
-   (setq fixeddwgname (makeproper dwgname))
-   (if (= fixeddwgname dwgname)
-      (putinexcel "fileNameFormatOK" "Yes")
-      (putinexcel "fileNameFormatOK" "No")
-   )
-   (setq dwgname fixeddwgname)
    (putinexcel "thisdwg" dwgname)
    (princ "\nDrawing name ")
    (princ dwgname)
    (princ " sent to excel...")
 )
 
-(defun makeproper (filename)
-   (setq namelength (strlen filename))
-   (setq str1 (strcase (substr filename 1 (- namelength 4))))
-   (setq str2 (strcase (substr filename (- namelength 3) 4) T))
-   (strcat str1 str2)
-)
-
 (defun chk2-extractions ()
    ; --- chk2 extraction
    (setq count (blkcount "I1184sht" "ModelSpace")) ; # of title blocks in model
-   (putinexcel "titleqtymodel" (itoa count))
+   (putinexcel "titleinmodel" (itoa count))
    (setq count (blkcount "I1184sht" "PaperSpace")) ; # of title blocks in paper
-   (putinexcel "titleqtypaper" (itoa count))
+   (putinexcel "titleinpaper" (itoa count))
    (if (= count 1)
       (progn
          (setq obj (getblk "I1184sht" "PaperSpace")) ; if only once in paper - get obj
@@ -65,12 +52,7 @@
          (putinexcel "Title3" (nth 1 (assoc "TITLE-3" titleatts)))
          (putinexcel "Title2" (nth 1 (assoc "TITLE-2" titleatts)))
          (putinexcel "Title1" (nth 1 (assoc "TITLE-1" titleatts)))
-         (if (assoc "FILE" titleatts)
-            (putinexcel "File" (nth 1 (assoc "FILE" titleatts)))
-         )
-         (if (assoc "FILENAME" titleatts)
-            (putinexcel "File" (nth 1 (assoc "FILENAME" titleatts)))
-         )
+         (putinexcel "File" (nth 1 (assoc "FILE" titleatts)))
          (putinexcel "DwgNum" (nth 1 (assoc "DWG#" titleatts)))
          (putinexcel "DwgDate" (nth 1 (assoc "DRW_DATE" titleatts)))
          (putinexcel "CheckDate" (nth 1 (assoc "CHK_DATE" titleatts)))
@@ -96,44 +78,9 @@
 )
 
 (defun chk8-extractions ()
-   (blank-cells "layer0model" 2 20)
-   (blank-cells "layer0paper" 2 20)
-   
    (setq lyr0ents (+ (layer0sum "ModelSpace") (layer0sum "PaperSpace")))
    (putinexcel "layer0ents" lyr0ents) 
 )
-
-;---------layer dump
-(defun chk9-extractions (/ nn)
-  (blank-cells "layers" 2 150)
-  (setq acadobj (vlax-get-acad-object))
-  (setq docs (vlax-get-property acadobj 'Documents))
-  (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
-  (setq doc (vlax-invoke-method docs 'Item dwgname))
-  
-  (setq layers (vlax-get-property doc "Layers")) 
-  (setq count (vlax-get-property layers 'Count))
-  (setq nn 0)
-  (setq return 0)
-  (setq next 0)
-  (while (< nn count)
-    (setq obj (vlax-invoke-method layers 'Item nn))
-    (setq objname (vlax-get-property obj 'Name))
-    (setq nn (1+ nn))
-   ; (putinexcel-indexed "layers" objname nn 1)
-    (if (not (hasline objname))
-       (progn
-          (setq next (1+ next))
-          (putinexcel-indexed "layers" objname next 1)
-       )
-    )
-  )
-  return
-)
-(defun hasline (str)
-  (wcmatch str "*|*")
-)
-
 
 (defun chk10-extractions ()
    (setq papertext (objsum "AcDbText" "PaperSpace"))
@@ -158,8 +105,6 @@
    (putinexcel "modelall" modelall)
 )
 (defun chk11-extractions ()
-  (blank-cells "textstyle" 6 20)
-  (blank-cells "textEntity" 6 100)
    ;-----------------chk 11 text styles
    (dumpstyles)
    ; dump text heights
@@ -168,7 +113,6 @@
 )
 
 (defun chk12-extractions ()
-   (blank-cells "blockname" 2 100)
    ;-----------------chk 12 block names
    (dumpblocks)
 )
@@ -201,7 +145,6 @@
               (if (= blkname "G-INORTH")
                  (progn
                     (setq blkrot (vlax-get-property obj 'Rotation))
-                    (setq xscale (vlax-get-property obj 'XScaleFactor))
                     (setq nqty (1+ nqty))
                   )
                )
@@ -209,7 +152,6 @@
             )
            (putinexcel "northarrowqty" nqty)
            (putinexcel "northarrowangle" blkrot)
-           (putinexcel "northxscale" xscale)
          )
       )
       (setq nn (1+ nn))
@@ -217,8 +159,6 @@
 )
 
 (defun chk15-extractions ()
-  (blank-cells "revisionline" 6 20)
-  (blank-cells "revInsert" 2 20)
   (setq acadobj (vlax-get-acad-object))
   (setq docs (vlax-get-property acadobj 'Documents))
   (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
@@ -229,67 +169,8 @@
   (setq nqty 0)
 
   (while (< nn (vlax-get-property blocks 'Count))
-    (setq curblk (vlax-invoke-method blocks 'Item nn))
-    (setq blkname (vlax-get-property curblk 'Name))
-    (if (= blkname "IBLK_7")
-      (progn
-        (setq paperspace (vlax-invoke-method blocks 'Item "*PAPER_SPACE"))
-        (setq pssize (vlax-get-property paperspace 'Count))
-        (setq mm 0)
-        (while (< mm pssize)
-          (setq obj (vlax-invoke-method paperspace 'Item mm))
-          (setq objname (vlax-get-property obj 'ObjectName))
-          (if (= objname "AcDbBlockReference")
-            (setq blkname (vlax-get-property obj 'Name))
-            (setq blkname "")
-          )
-          (if (= blkname "IBLK_7")
-            (progn
-              
-              (setq inspt (vlax-get-property obj 'InsertionPoint));********variant
-              (setq ptval (vlax-variant-value inspt))
-              (setq borg (vlax-safearray->list ptval))
-              (setq eorg (strcat (rtos (nth 0 borg)) ; turn coords to string
-                  ","
-                  (rtos (nth 1 borg))
-                  ","
-                  (rtos (nth 2 borg))
-                )
-              )
-              (putinexcel-indexed "revisionline" eorg (1+ nqty) 0) 	
-              (setq lyr (vlax-get-property obj 'Layer)); putinexcel
-              (setq atts (vlax-invoke-method obj 'GetAttributes))
-              (setq attsarray (vlax-variant-value atts))
-              (setq len (1+ (vlax-safearray-get-u-bound attsarray 1)))
-              (setq rr 0)
-              (setq yy 0)
-              (while (< rr len)
-                (setq att (vlax-safearray-get-element attsarray rr))
-                (setq tag (vlax-get-property att 'TagString))
-                (setq val (vlax-get-property att 'TextString))
-                (if (< yy 5)
-                  (setq yy (1+ yy))
-                  (progn
-                    (setq yy 1)
-                    (setq nqty (1+ nqty))
-                    (putinexcel-indexed "revisionline" "7 line block" (1+ nqty) 0)
-                  )
-                )
-                (putinexcel-indexed "revisionline" val (1+ nqty) yy)
-                (setq rr (1+ rr))
-              )    
-              (setq nqty (1+ nqty))
-            )
-          )
-          (setq mm (1+ mm))
-        )
-      )
-    )
-   ; (setq nn (1+ nn))
-    
-      
-      
-        
+     (setq curblk (vlax-invoke-method blocks 'Item nn))
+     (setq blkname (vlax-get-property curblk 'Name))
      (if (= blkname "IBLK_1")
         (progn
            (setq paperspace (vlax-invoke-method blocks 'Item "*PAPER_SPACE"))
@@ -341,8 +222,6 @@
 )
 
 (defun chk16-extractions ()
-  (blank-cells "dimstyle" 22 20)
-  (blank-cells "dimEntities" 28 100)
    ;----------------chk 16 dim styles
    (dumpdims)
    ;need entity scan
@@ -421,15 +300,16 @@
 
 
 (defun chk17-extractions()
-  (blank-cells "linetype" 2 30)
    ;----------------chk 17 linetypes
    (dumplinetypes)
 )
 
 (defun chk18-extractions ()
    ;--------------- chk 18 purge check
-   (checkpurge)
-
+   (if (checkpurge)
+      (putinexcel "purge" "ok")
+      (putinexcel "purge" "x")
+    )
 )
 
 ;---------- linetype dump
@@ -465,7 +345,7 @@
    
 ;---------dim dump
 (defun dumpdims (/ nn) ; must modify to access all entities
-  (blank-cells "dimstyle" 22 20)
+  (blank-cells "dimstyle" 65 20)
   (setq acadobj (vlax-get-acad-object))
   (setq docs (vlax-get-property acadobj 'Documents))
   (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
@@ -678,7 +558,7 @@
            (putinexcel-indexed "textEntity" txlyr tt 2)
            (putinexcel-indexed "textEntity" txstr tt 3)
            (putinexcel-indexed "textEntity" txstl tt 4)
-           (putinexcel-indexed "textEntity" curspace tt 5)
+           (putinexcel-indexed "textEntity" "model space" tt 5)
         )
      )
      (setq nn (1+ nn))
@@ -686,10 +566,42 @@
   tt
 )
   
+
+;---------layer dump
+(defun chk9-extractions (/ nn)
+  (blank-cells "layers" 2 150)
+  (setq acadobj (vlax-get-acad-object))
+  (setq docs (vlax-get-property acadobj 'Documents))
+  (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
+  (setq doc (vlax-invoke-method docs 'Item dwgname))
+  
+  (setq layers (vlax-get-property doc "Layers")) 
+  (setq count (vlax-get-property layers 'Count))
+  (setq nn 0)
+  (setq return 0)
+  (setq next 0)
+  (while (< nn count)
+    (setq obj (vlax-invoke-method layers 'Item nn))
+    (setq objname (vlax-get-property obj 'Name))
+    (setq nn (1+ nn))
+   ; (putinexcel-indexed "layers" objname nn 1)
+    (if (not (hasline objname))
+       (progn
+          (setq next (1+ next))
+          (putinexcel-indexed "layers" objname next 1)
+       )
+    )
+  )
+  return
+)
+(defun hasline (str)
+  (wcmatch str "*|*")
+)
+
 ;---------xref export lisps
 (defun listxrefs (/ nn count acadobj docs dwgname database return mm)
   (blank-cells "XrefList" 14 40) ;  clears previous xrefs from template
-    (setq numxrefs 0) ; spagetti
+
 	; ModelSpace PaperSpace
   (setq database (get-all-blocks "Blocks"))
   (setq count (vlax-get-property database 'Count))
@@ -722,30 +634,25 @@
             (if	(/= (logand 2 c70) 2)
               (progn
                 (setq bpath (vlax-get-property obj 'Path))
-                (setq instance (getinstance xname))
                 (setq borg (vlax-safearray->list       ; get coords
                       (vlax-variant-value
-                        (vlax-get-property instance 'InsertionPoint)
+                        (vlax-get-property obj 'Origin)
                       )
                     )
                 )
-              ;  (setq eorg (strcat (rtos (nth 0 borg) 2 3) ; turn coords to string
-              ;      ","
-              ;      (rtos (nth 1 borg) 2 3)
-              ;      ","
-              ;      (rtos (nth 2 borg) 2 3)
-              ;    )
-              ;  )
-                (if (or (/= (nth 0 borg) 0) (/= (nth 1 borg) 0) (/= (nth 2 borg) 0))
-                  (putinexcel-indexed "XrefList" "No" next 11)
-                  (putinexcel-indexed "XrefList" "Yes" next 11)
-                )  
+                (setq eorg (strcat (rtos (nth 0 borg)) ; turn coords to string
+                    ","
+                    (rtos (nth 1 borg))
+                    ","
+                    (rtos (nth 2 borg))
+                  )
+                )
                 (putinexcel-indexed "XrefList" bpath next 2)
                 (if (hasslash bpath)
                   (putinexcel-indexed "XrefList" "Yes" next 13)
                   (putinexcel-indexed "XrefList" "No" next 13)
                 )
-                ;(putinexcel-indexed "XrefList" eorg next 11)
+                (putinexcel-indexed "XrefList" eorg next 11)
                 (putinexcel-indexed "XrefList" c70 next 3)
                 (if (= (logand 1 c70) 1)
                   (putinexcel-indexed "XrefList" "Yes" next 4)
@@ -768,7 +675,6 @@
                 (if (= (logand 64 c70) 64)
                   (putinexcel-indexed "XrefList" "Yes" next 10)
                 )
-                
               )
             )
           )
@@ -778,46 +684,7 @@
     )
     (setq nn (1+ nn))
   )
-  (putinexcel "xrefsInModel" (itoa numxrefs))
 )
-
-(defun getinstance (xname / nn)
-  (setq allmodel (get-all-blocks "ModelSpace"))
-  (setq total (vlax-get-property allmodel 'Count))
-  (setq nn 0)
-  (setq return nil)
-  (while (< nn total)
-    (setq curblock (vlax-invoke-method allmodel 'Item nn))
-    (setq oname (vlax-get-property curblock 'ObjectName))
-    (if (= oname "AcDbBlockReference")
-       (setq curname (vlax-get-property curblock 'Name))
-    )
-    (if (= curname xname)
-       (progn
-          (setq return curblock)
-          (setq numxrefs (1+ numxrefs)) ; spagetti
-       )
-    )
-    (setq curname nil)
-    (setq nn (1+ nn))
-  )
-  (setq allpaper (get-all-blocks "PaperSpace"))
-  (setq total (vlax-get-property allpaper 'Count))
-  (setq nn 0)
-  (while (< nn total)
-    (setq curblock (vlax-invoke-method allpaper 'Item nn))
-    (setq oname (vlax-get-property curblock 'ObjectName))
-    (if (= oname "AcDbBlockReference")
-       (setq curname (vlax-get-property curblock 'Name))
-    )
-    (if (= curname xname)
-       (setq return curblock)
-    )
-    (setq curname nil)
-    (setq nn (1+ nn))
-  )
-  return
-)  
 
 (defun blank-cells (fromrange inx iny / nn mm) ; clears cells 40 height by 20 width
   (setq nn 1)
@@ -846,71 +713,24 @@
   (wcmatch str "*\\*")
 )
 
-(defun ispurged (doc)
- ; (setq acad (vlax-get-acad-object))
- ; (setq doc (vlax-get-property acad 'ActiveDocument)) ; change to current doc
-  (setq tablecountbefore
-    (+
-      (getcount doc 'Blocks)
-      (getcount doc 'DimStyles)
-      (getcount doc 'Layers)
-      (getcount doc 'Linetypes)
-      (getcount doc 'Materials)
-      (getcount doc 'TextStyles)
-    )
-  )
-  (vlax-invoke-method doc "PurgeAll")
-  (setq tablecountafter
-    (+
-      (getcount doc 'Blocks)
-      (getcount doc 'DimStyles)
-      (getcount doc 'Layers)
-      (getcount doc 'Linetypes)
-      (getcount doc 'Materials)
-      (getcount doc 'TextStyles)
-    )
-  )
-  (if (> tablecountbefore tablecountafter)
-     nil
-     T
-  )
-)
-  
-  
-(defun getcount (doc field)
-  (setq obj (vlax-get-property doc field))
-  (vlax-get-property obj 'Count)
-)
-
 ;-------- check if document can be purged
 (defun checkpurge ()
   (setq acadobj (vlax-get-acad-object))
   (setq docs (vlax-get-property acadobj 'Documents))
   (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
   (setq doc (vlax-invoke-method docs 'Item dwgname))
-;  (vlax-invoke-method doc "PurgeAll")
-;  (setq return (vlax-get-property doc "Saved"))
-  
-;  (if (= return :vlax-false)
-;    (putinexcel "isPurged" "-")
-;    (putinexcel "isPurged" "ok")
-;  )
+ ; (vlax-invoke-method doc "PurgeAll")
+ ; (setq return (vlax-get-property doc "Saved"))
 
-  (if (ispurged doc)
-    (putinexcel "isPurged" "ok")
-    (putinexcel "isPurged" "x")
+  (setq blocks (vlax-get-property doc 'Blocks))
+  (setq nn 2)
+  (setq notmissing T)
+  (while (and (< nn (vlax-get-property blocks 'Count)) notmissing)
+     (setq notmissing (checkforblock (vlax-invoke-method blocks 'Item nn)))
+     (setq nn (1+ nn))
   )
-
-
-;  (setq blocks (vlax-get-property doc 'Blocks))
-;  (setq nn 2)
-;  (setq notmissing T)
-;  (while (and (< nn (vlax-get-property blocks 'Count)) notmissing)
-;     (setq notmissing (checkforblock (vlax-invoke-method blocks 'Item nn)))
-;     (setq nn (1+ nn))
-;  )
   
-;  notmissing
+  notmissing
 )
 
 (defun checkforblock (blk / nn mm)
@@ -963,13 +783,8 @@
   return
 )
 
-
 ;------- get all entities on layer 0 - by space need to check both spaces
 (defun layer0sum (space / nn)
-  (if (= space "*MODEL_SPACE")
-    (setq spacerange "layer0model")
-    (setq spacerange "layer0paper")
-  )
   (setq acadobj (vlax-get-acad-object))
   (setq docs (vlax-get-property acadobj 'Documents))
   (setq dwgname (vl-registry-read "HKEY_CURRENT_USER\\Software\\ACT\\Intel-Standards-Checker" "Current drawing"))
@@ -982,13 +797,10 @@
     (setq obj (vlax-invoke-method database 'Item nn))
     (setq lyrname (vlax-get-property obj 'Layer))
     (setq objname (vlax-get-property obj 'ObjectName))
-    (setq nn (1+ nn))
     (if (and (= lyrname "0") (/= objname "AcDbViewport")) ; ignore viewport on layer 0
-      (progn
-        (setq return (1+ return))
-        (putinexcel-indexed spacerange objname nn 1)
-      )
+      (setq return (1+ return))
     )
+    (setq nn (1+ nn))
   )
   return
 )
@@ -1041,7 +853,7 @@
     (setq obj (vlax-invoke-method database 'Item nn))
     (setq objtype (vlax-get-property obj 'ObjectName))
     (if (= objtype "AcDbBlockReference")
-      (if (= (strcase (vlax-get-property obj 'Name)) (strcase blkname))
+      (if (= (vlax-get-property obj 'Name) blkname)
 	(setq return obj)
       )
     )
@@ -1065,7 +877,7 @@
     (setq obj (vlax-invoke-method database 'Item nn))
     (setq objtype (vlax-get-property obj 'ObjectName))
     (if (= objtype "AcDbBlockReference")
-      (if (= (strcase (vlax-get-property obj 'Name)) (strcase blkname))
+      (if (= (vlax-get-property obj 'Name) blkname)
 	(setq return (1+ return))
       )
     )

@@ -1,0 +1,38 @@
+(defun chk17 (/ retval)
+   (setq retval "ok")
+   (if (hasltypeproblem)
+      (setq retval "X")
+   )
+   retval
+)
+
+(defun hasltypeproblem (/ retval thisretval)
+   (setq retval nil)
+   (setq first T)
+   (setq thisretval nil)
+   (while (setq tbllist (tblnext "LTYPE" first))
+      (setq first nil)
+      (setq c2 (strcase (cdr (assoc 2 tbllist))))
+      (if (not (hasline c2))
+         (if (notingoodlist c2)
+            (setq thisretval T)
+         )
+      )
+      (if thisretval
+         (setq retval T)
+      )
+   )
+   retval
+)
+
+(defun notingoodlist (thisltype / retval)
+   (setq retval T)
+   (setq l_file (open (strcat installdirectory "correct-ltypes.txt") "r"))
+   (while (setq r-line (read-line l_file))
+      (if (= r-line thisltype)
+         (setq retval nil)
+      )
+   )
+   (close l_file)
+   retval
+)
