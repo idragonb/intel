@@ -1,6 +1,33 @@
 revision history
 
 current version
+version 2.0.1.12 creation date 02-09-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 29-08-12) Fixed report check 11 - problem sending text with "=" to excel 
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+2) (from 8-7-12) dimstyle entities analysis
+3) (from 10-7-12) add uninstall option or instructions
+4) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+
+current version
+version 2.0.1.10 creation date 15-08-12-------------------------------------------------------------------------------
+
+Solved modifications in this release:
+
+1) (from 15-08-12) Non-layout drawings can have model space entities
+
+UNSOLVED to be incorporated in future revision:
+
+1) (from 8-7-12) chk2 - check viewport scales and compare to titleblock scale
+2) (from 8-7-12) dimstyle entities analysis
+3) (from 10-7-12) add uninstall option or instructions
+4) (from 15-7-12) need to trouble shoot install problem - buttons do not appear
+current version
 version 2.0.1.9 creation date 13-08-12-------------------------------------------------------------------------------
 
 Solved modifications in this release:

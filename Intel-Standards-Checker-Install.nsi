@@ -1,8 +1,8 @@
-!define VERSION "2.0.1.9"
+!define VERSION "2.0.1.12"
 Name "Intel-Standards-Checker ${VERSION}"
 OutFile "Intel-Standards-Checker-Install.exe - ${VERSION}.exe"
 
-VIProductVersion "2.0.1.9"
+VIProductVersion "2.0.1.12"
 VIAddVersionKey ProductName "Intel-Standards-Checker ${VERSION}"
 VIAddVersionKey Comments "Intel Standards Checker - Compliance for: FAB 28 - 2005 Rev.8 Version 3"
 VIAddVersionKey CompanyName "Applying Computer Technologies"
